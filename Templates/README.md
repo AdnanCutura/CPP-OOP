@@ -56,5 +56,6 @@ public:
    N GetSize {return N;}
 }
 
-
 ```
+
+https://www.fluentcpp.com/2019/05/14/3-types-of-macros-that-improve-c-code/

@@ -21,3 +21,35 @@ int main(){
     Print("My message");
 }
 ```
+
+Macro lasts until `#undef MACRO_NAME` preprocessor directive.
+Function macro definitions accept two special operators (# and ##) in the replacement sequence
+ - \## for concatination
+ - \# for displaying string literal
+
+
+
+Examples
+```c++
+#define getmax(a,b) a>b?a:b
+
+#define ARRAY_SIZE 100
+
+#define glue(a,b) a ## b // ## will concatinate two parameters
+glue(c,out) << "test";
+
+#define str(x) #x
+cout << str(test);
+cout << "test";
+
+```
+
+Predefined macro names
+```c++
+  LINE__	Integer value representing the current line in the source code file being compiled.
+__FILE__	A string literal containing the presumed name of the source file being compiled.
+__DATE__	A string literal in the form "Mmm dd yyyy" containing the date in which the compilation process began.
+__TIME__	A string literal in the form "hh:mm:ss" containing the time at which the compilation process began. 
+```
+
+http://www.cplusplus.com/doc/tutorial/preprocessor/
