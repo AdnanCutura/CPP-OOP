@@ -33,3 +33,28 @@ LogTemplate<float>(3.1); // void LogTemplate(float value) will be created
 LogTemplate<string>("Log this warning."); // void LogTemplate(string value) will be created
 ```
 
+Examples:
+```c++
+// Get max template
+template <typename T>
+T GetMax(T value1, T value2){
+  return (a > b ? a : b);
+}
+
+// Get min template
+template <typename T, typename U>
+T GetMin(T value1, U value2){
+  return (a > b ? a : b);
+}
+
+// Array class templated  
+template <typename T, int N>
+class Array {
+private:
+   T _array[N];
+public:
+   N GetSize {return N;}
+}
+
+
+```
