@@ -95,7 +95,7 @@ public:
 
 int main()
 {
-	
+
 #pragma region  Virutal constructor
 #if 0 
 	Entity* entity = new Entity;
@@ -114,7 +114,7 @@ int main()
 #pragma endregion
 
 #pragma region Static casting
-#if 0
+#if 1
 
 	float f1 = 2.19;
 	int i1 = f1;
@@ -123,7 +123,13 @@ int main()
 	vector<int> v = static_cast<vector<int>>(10);
 	cout << v.size() << endl;
 
-
+	Player* player = new Player("adnan");
+	Entity* e = static_cast<Entity*>(player);
+	e->Print();
+	cout << "~~~~~~~~~~~~~~~~~~~~~~" << endl;
+	Entity* entity = new Entity(25, 5);
+	Player* p = static_cast<Player*>(entity);
+	p->Print();
 #endif
 #pragma endregion
 
@@ -194,7 +200,8 @@ int main()
 #pragma region Const casting
 #if 0
 	const Player playerConst = Player("Constant attacker");
-	Player* player = const_cast<Player*>(&playerConst); //static_cast cannot cast away const or other type qualifiers
+	//Player* player = const_cast<Player*>(&playerConst); //static_cast cannot cast away const or other type qualifiers
+	Player player = const_cast<Player&>(playerConst); //static_cast cannot cast away const or other type qualifiers
 
 #endif
 #pragma endregion

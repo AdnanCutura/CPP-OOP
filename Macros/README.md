@@ -46,7 +46,7 @@ cout << "test";
 
 Predefined macro names
 ```c++
-  LINE__	Integer value representing the current line in the source code file being compiled.
+__LINE__	Integer value representing the current line in the source code file being compiled.
 __FILE__	A string literal containing the presumed name of the source file being compiled.
 __DATE__	A string literal in the form "Mmm dd yyyy" containing the date in which the compilation process began.
 __TIME__	A string literal in the form "hh:mm:ss" containing the time at which the compilation process began. 
