@@ -72,9 +72,13 @@ int main()
 {
 	// Moving object instead of copying it -> better performance
 
-	Entity entity(String("Adnan"));
+	//Entity entity(String("Adnan"));
 
-	entity.Print();
+	//entity.Print();
+
+
+	String ado("Adnan");
+	String niko = move(ado);
 
 	system("Pause>0");
 }
