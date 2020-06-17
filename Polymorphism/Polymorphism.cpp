@@ -2,6 +2,14 @@
 #include <vector>
 using namespace std;
 
+#ifndef _DEBUG
+#define Log(message)
+#else
+#define Log(message) cout<<"-> " << message << endl
+#endif
+
+const char* crt = "\n-------------------------\n";
+
 class Entity
 {
 private:
@@ -12,8 +20,9 @@ public:
 	{
 		_health = health;
 		_power = power;
+		Log("Entity created");
 	}
-	virtual ~Entity() { }
+	virtual ~Entity() { Log("Entity deleted"); }
 
 	void SetHealth(float health)
 	{
@@ -31,16 +40,18 @@ public:
 	{
 		return _health;
 	}
-	virtual void Print() { cout << "Health: " << _health << "\nPower: " << _power << endl; }
+	virtual void Print() { cout << "Health: " << _health << "\nPower: " << _power << "\n"; }
 };
-
 class Enemy :public Entity
 {
 private:
 	string _superPower;
 public:
-	Enemy(string superPower) { _superPower = superPower; }
-	~Enemy() { }
+	Enemy(string superPower, float health = 10, float power = 0) :Entity(health, power)
+	{
+		_superPower = superPower; Log("Enemy created");
+	}
+	~Enemy() { Log("Enemy deleted"); }
 
 	void Print() override
 	{
@@ -48,19 +59,19 @@ public:
 		cout << "Super power: " << _superPower << endl;
 	}
 };
-
 class Player :public Entity
 {
 private:
 	string _username;
 	int _level;
 public:
-	Player(string username = "New-Player")
+	Player(string username = "New-Player", float health = 10, float power = 0) :Entity(health, power)
 	{
 		_level = 0;
 		_username = username;
+		Log("Player created");
 	}
-	~Player() { }
+	~Player() { Log("Player deleted"); }
 	int GetLevel() const { return _level; }
 	string GetUsername() const { return _username; }
 
@@ -68,10 +79,9 @@ public:
 	void Print() override
 	{
 		Entity::Print();
-		cout << "Username: " << _username << "\nLevel: " << _level << endl;
+		cout << "Username: " << _username << "\nLevel: " << _level << "\n\n";
 	}
 };
-
 class Object
 {
 	float _health;
@@ -96,8 +106,63 @@ public:
 int main()
 {
 
+	Entity e1(15, 100);
+	Player p1("Adnan Cutura", 20, 100);
+
+	Player* p1pok = new Player("AdoNet", 30, 200);
+
+#pragma region Upcasting
+
+#pragma region Implicit and explicit
+#if 0
+
+	// Implicitly upcasting Player to Entity
+	Entity e2 = p1;
+	e2.Print(); cout << endl;
+
+	Entity* e4 = &p1;
+	e4->Print(); cout << endl;
+
+	Entity* e5 = p1pok;
+	e5->Print(); cout << endl;
+
+	Entity e6 = *p1pok;
+	e6.Print(); cout << endl;
+
+	//Explicitly upcasting Player to Entity
+	Entity e3 = (Entity)p1;
+	e3.Print(); cout << endl;
+
+	e4 = nullptr; e5 = nullptr;
+#endif
+#pragma endregion
+
+#pragma region Static_cast
+#if 0
+
+	// Left side is pointer, right is object
+	Entity* e2Pok = static_cast<Entity*>(&p1); // Forbidden dealocation since pointer points to Entity which has destructor
+	e2Pok->Print(); cout << endl;
+
+	// Left and right side are pointers
+	Entity* e3Pok = static_cast<Entity*>(p1pok);
+	e3Pok->Print(); cout << endl;
+
+	// Left side is object, right is pointer
+	Entity e7 = static_cast<Entity&>(*p1pok);
+	e7.Print(); cout << endl;
+
+	// Left and right side are objects
+	Entity e8 = static_cast<Entity&>(p1);
+	e8.Print();  cout << endl;
+
+	e2Pok = nullptr; e3Pok = nullptr;
+
+#endif
+#pragma endregion
+
 #pragma region  Virutal constructor
-#if 0 
+#if 0
 	Entity* entity = new Entity;
 	delete entity;
 
@@ -113,88 +178,81 @@ int main()
 #endif
 #pragma endregion
 
-#pragma region Static casting
-#if 1
+#pragma endregion
 
-	float f1 = 2.19;
-	int i1 = f1;
-	int i2 = static_cast<int>(f1);
+#pragma region Downcasting
+#if 0
 
-	vector<int> v = static_cast<vector<int>>(10);
-	cout << v.size() << endl;
+#pragma region Implicit and explicit
+#if 0
 
-	Player* player = new Player("adnan");
-	Entity* e = static_cast<Entity*>(player);
-	e->Print();
-	cout << "~~~~~~~~~~~~~~~~~~~~~~" << endl;
-	Entity* entity = new Entity(25, 5);
-	Player* p = static_cast<Player*>(entity);
-	p->Print();
+	// Implicit downcast is forbidden, it will results in creating a compile-time error
+	// Player sE1 = e1;
+	// Player* sE2 = &e1;
+
+	// Explicitly downcasting Entity to Player
+
+	// Error: Triggering copy constructor, since e1 hasn't Player data, during the copy of empty pointer it will create run-time error
+	//Player pE3 = (Player&)e1;
+
+	Player* p2 = (Player*)&e1;
+	p2->Print();
+
+	p2 = nullptr;
+
 #endif
 #pragma endregion
 
-#pragma region Dynamic casting
+#pragma region Dynamic and static cast
 #if 0
 
-	Entity* entitesList[4] = {
-		new Player("Adnan Cutura"),
-		new Enemy("Magic"),
-		new Player("Edin Džeko"),
-		new Enemy("Fire")
+	Entity* entities[4] = {
+		new Player("Player_1",10,10),
+		new Player("Player_2",20,20),
+		new Enemy("Fireball",30,20),
+		new Enemy("Wizard",20,30),
 	};
-
-	vector<Player> listOfPlayers;
-	vector<Enemy> listOfEnemies;
-	Player* playerAdnan = new Player("Adnan Čutura");
-	Enemy* enemyFireball = new Enemy("Fire");
-
-	Player p;
-	Player p_bad;
-	try
-	{
-		Player p = dynamic_cast<Player&>(*playerAdnan);
-		Player p_bad = dynamic_cast<Player&>(*enemyFireball);
-	}
-	catch (exception& err)
-	{
-		cout << err.what() << endl;;
-	}
-
-	p.Print();
-	p_bad.Print();
-	cout << "........................" << endl;
 
 	for (int i = 0; i < 4; ++i)
 	{
-		Player* player = dynamic_cast<Player*>(entitesList[i]);
+		// Dynamic downcasting Entity to player with a pointer to class as a return type
+		Player* pDynamic = dynamic_cast<Player*>(entities[i]);
 
-		if (player)
+		if (pDynamic != nullptr)
 		{
-			listOfPlayers.push_back(*player);
-			continue;
+			cout << "-> Player\n";
+			pDynamic->Print();
+		}
+		else
+		{
+			// Static downcasting Entity to Enemy with a pointer to class as a return type
+			Enemy* eStatic = static_cast<Enemy*>(entities[i]);
+			cout << "-> Enemy\n";
+			eStatic->Print();
 		}
 
-		Enemy* enemy = dynamic_cast<Enemy*>(entitesList[i]);
-		if (enemy)
-			listOfEnemies.push_back(*enemy);
+		cout << crt;
 	}
 
-
-	for (size_t i = 0; i < listOfPlayers.size(); i++)
+	for (int i = 0; i < 4; ++i)
 	{
-		listOfPlayers[i].Print();
-		cout << "\n-------------------------\n";
+		try
+		{
+			// Dynamic downcasting Entity to player with a reference to class as a return type
+			Player pDynamic = dynamic_cast<Player&>(*entities[i]);
+			pDynamic.Print();
+		}
+		catch (exception& err)
+		{
+			cout << "-> Error: " << err.what() << endl;
+		}
+		cout << crt;
 	}
 
-	cout << "\n*************************\n\n";
-	for (size_t i = 0; i < listOfEnemies.size(); i++)
-	{
-		listOfEnemies[i].Print();
-		cout << "\n-------------------------\n";
-	}
+#endif
+#pragma endregion
 
-
-#endif // 0
+#endif
 #pragma endregion
 
 #pragma region Const casting
@@ -219,5 +277,4 @@ int main()
 #endif
 #pragma endregion
 
-	system("Pause>0");
 }
