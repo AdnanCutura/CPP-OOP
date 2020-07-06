@@ -100,12 +100,12 @@ public:
 		return _array2[index];
 	};
 
-	tuple<T1, T2> GetByIndex(int index) const {
+	tuple<T1, T2, T2> GetByIndex(int index) const {
 
 		if (index >= _numElements)
 			throw exception("Index exceed dictionary size!");
 
-		return make_tuple(_array1[index], _array2[index]);
+		return make_tuple(_array1[index], _array2[index], _array2[index + 1]);
 	};
 	Dictionary<T1, T2> GetRange(int from, int to)const
 	{
@@ -200,45 +200,45 @@ int main()
 #pragma endregion
 
 #pragma region Get Dictionary pairs by index
-	
-	int elem1; float elem2;
-	tie(elem1, elem2) = dictionary.GetByIndex(5);
+
+	int elem1; float elem2; float elem3;
+	tie(elem1, elem2, elem3) = dictionary.GetByIndex(5);
 	cout << elem1 << " - " << elem2 << "\n";
 
 #pragma endregion
 
 #pragma region Get Dictionary array
-	
+
 	int* a1 = dictionary.GetArray1();
 
 	for (int i = 0; i < 10; ++i)
 		cout << *(a1 + i) << "\n";
-	
+
 #pragma endregion
 
 #pragma region Get range from dictionary
-	
+
 	//Copy constructor required
 	Dictionary<int, float> range = dictionary.GetRange(2, 7);
 	cout << range << endl;
-	
+
 #pragma endregion
 #pragma region Remove at certain index
-	
+
 	dictionary.RemoveAt(3);
 	cout << dictionary;
-	
+
 #pragma endregion
 
 #pragma region Sorting
-	
+
 	dictionary.SortDescending();
 	cout << dictionary;
 
 	dictionary.SortAscending();
 	cout << dictionary;
-	
+
 #pragma endregion
-	
+
 	system("Pause>0");
 }
