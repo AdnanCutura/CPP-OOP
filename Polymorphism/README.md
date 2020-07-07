@@ -96,3 +96,32 @@ const int j = 3; // j is declared const
 //static_cast cannot cast away const or other type qualifiers
 int* pj = const_cast<int*>(&j); 
 ```
+
+
+-----
+## Upcast
+
+Converting child to parent.
+
+
+
+## Downcast
+
+Converting parent to child.
+**Explicit type case required**
+
+```c++
+Player *pPlayer;
+Entity *pEntity;
+
+Player* player = new Player("Adnan", 15, 25);
+Entity* entity = new Entity(20, 50);
+
+// Upcasting
+pEntity = &p;
+pEntity->Print();
+
+// Downcasting
+pPlayer = (Player*)entity;
+pPlayer->Print();
+```
